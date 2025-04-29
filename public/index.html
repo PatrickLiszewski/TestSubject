@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Test Subject</title>
+  <style>
+    #circle {
+      width: 100px;
+      height: 100px;
+      background-color: red;
+      border-radius: 50%;
+      margin: 50px auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="circle"></div>
+  <button onclick="changeColor()">Change Color</button>
+  <button onclick="bigger()">Bigger</button>
+  <button onclick="smaller()">Smaller</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const circle = document.getElementById('circle');
+
+    // Update circle color when message received
+    socket.on('updateColor', (color) => {
+      circle.style.backgroundColor = color;
+    });
+
+    // Increase circle size when message recieved
+    socket.on('makeBig', (size) => {
+        circle.style.width = size;
+        circle.style.height = size;
+    });
+
+    // Decrease circle size when message recieved
+    socket.on('makeSmall', (size) => {
+        circle.style.width = size;
+        circle.style.height = size;
+    });
+
+    function changeColor() {
+      const color = getRandomColor();
+      socket.emit('changeColor', color);
+    }
+
+    function bigger() {
+        const currentSize = parseInt(circle.style.width) || 100; // default to 100 if empty
+        const newSize = currentSize + 10;
+        socket.emit('bigger', newSize + 'px');
+    }
+
+    function smaller() {
+        const currentSize = parseInt(circle.style.width) || 100; // default to 100 if empty
+        const newSize = currentSize - 10;
+        socket.emit('smaller', newSize + 'px');
+    }
+
+    function getRandomColor() {
+      return '#' + Math.floor(Math.random() * 16777215).toString(16);
+    }
+  </script>
+</body>
+</html>
