@@ -29,7 +29,6 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      align-items: center;
       padding: 10px;
     }
 
@@ -105,14 +104,26 @@
   }
 
   function bigger() {
-      const tempSize = parseInt(shape.style.width) || 100; // default to 100 if empty
-      const newSize = tempSize + 10;
+      const tempSize = parseInt(shape.style.width);
+      let newSize;
+      if(tempSize < 400) {
+        newSize = tempSize + 10;
+      }
+      else {
+        newSize = tempSize;
+      }
       socket.emit('sendSize', newSize + 'px');
   }
 
   function smaller() {
-      const tempSize = parseInt(shape.style.width) || 10; // default to 100 if empty
-      const newSize = tempSize - 10;
+      const tempSize = parseInt(shape.style.width);
+      let newSize;
+      if(tempSize > 10) {
+        newSize = tempSize - 10;
+      }
+      else {
+        newSize = tempSize;
+      }
       socket.emit('sendSize', newSize + 'px');
   }
 
