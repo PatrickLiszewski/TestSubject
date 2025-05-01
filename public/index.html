@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Test Subject</title>
   <style>
-    #circle {
+    #shape {
       width: 100px;
       height: 100px;
       background-color: red;
@@ -14,7 +14,7 @@
   </style>
 </head>
 <body>
-  <div id="circle"></div>
+  <div id="shape"></div>
   <button onclick="changeColor()">Change Color</button>
   <button onclick="bigger()">Bigger</button>
   <button onclick="smaller()">Smaller</button>
@@ -22,19 +22,19 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
-    const circle = document.getElementById('circle');
+    const shape = document.getElementById('shape');
 
     
 
-    // Update circle color when message received
+    // Update shape color when message received
     socket.on('updateColor', (color) => {
-      circle.style.backgroundColor = color;
+      shape.style.backgroundColor = color;
     });
 
-    // Increase/Decrease circle size when message recieved
+    // Increase/Decrease shape size when message recieved
     socket.on('changeSize', (size) => {
-        circle.style.width = size;
-        circle.style.height = size;
+        shape.style.width = size;
+        shape.style.height = size;
     });
 
     function changeColor() {
@@ -43,13 +43,13 @@
     }
 
     function bigger() {
-        const tempSize = parseInt(circle.style.width) || 100; // default to 100 if empty
+        const tempSize = parseInt(shape.style.width) || 100; // default to 100 if empty
         const newSize = tempSize + 10;
         socket.emit('sendSize', newSize + 'px');
     }
 
     function smaller() {
-        const tempSize = parseInt(circle.style.width) || 100; // default to 100 if empty
+        const tempSize = parseInt(shape.style.width) || 100; // default to 100 if empty
         const newSize = tempSize - 10;
         socket.emit('sendSize', newSize + 'px');
     }
