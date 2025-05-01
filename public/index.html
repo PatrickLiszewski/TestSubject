@@ -5,15 +5,24 @@
   <title>Test Subject</title>
   <style>
     #flex-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 40px; /* space between shape and buttons */
-    flex-wrap: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 50px;
+      margin-top: 50px;
+    }
+    #shape-container {
+      width: 200px; 
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     #shape {
-      flex-shrink: 0; /* prevent resizing */
+      width: 100px;
+      height: 100px;
+      background-color: red;
+      border-radius: 50%;
     }
     #controlPanel {
       display: flex;
@@ -21,18 +30,15 @@
       gap: 10px;
       align-items: center;
     }
-    #shape {
-      min-width: 50px;
-      max-width: 300px;
-      min-height: 50px;
-      max-height: 300px;
-    }
+
   </style>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 </head>
 <body>
   <div id="flex-container">
-    <div id="shape"></div>
+    <div id="shape-container">
+      <div id="shape"></div>
+    </div>
     <div id="controlPanel">
       <button onclick="changeColor()">Change Color</button>
       <button onclick="bigger()">Bigger</button>
@@ -40,6 +46,7 @@
       <button onclick="changeShape()">Change Shape</button>
     </div>
   </div>
+  
 </body>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -73,19 +80,20 @@
 
   function changeShape() { 
   let radius;
-    if (shape.style.borderRadius === "50%") {
+  const computedRadius = getComputedStyle(shape).borderRadius;
+    if (computedRadius === "50%") {
       lastShape = "circle";
       radius = "25%";
     }
-    else if (shape.style.borderRadius === "25%" && lastShape === "circle") {
+    else if (computedRadius === "25%" && lastShape === "circle") {
       radius = "0%";
       lastShape = "square";
     }
-    else if (shape.style.borderRadius === "25%" && lastShape === "square") {
+    else if (computedRadius === "25%" && lastShape === "square") {
       radius = "50%";
       lastShape = "circle";
     }
-    else if (shape.style.borderRadius === "0%") {
+    else if (computedRadius === "0%") {
       radius = "25%";
       lastShape = "square";
     }
