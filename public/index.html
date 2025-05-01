@@ -24,19 +24,15 @@
     const socket = io();
     const circle = document.getElementById('circle');
 
+    
+
     // Update circle color when message received
     socket.on('updateColor', (color) => {
       circle.style.backgroundColor = color;
     });
 
-    // Increase circle size when message recieved
-    socket.on('makeBig', (size) => {
-        circle.style.width = size;
-        circle.style.height = size;
-    });
-
-    // Decrease circle size when message recieved
-    socket.on('makeSmall', (size) => {
+    // Increase/Decrease circle size when message recieved
+    socket.on('changeSize', (size) => {
         circle.style.width = size;
         circle.style.height = size;
     });
@@ -47,15 +43,15 @@
     }
 
     function bigger() {
-        const currentSize = parseInt(circle.style.width) || 100; // default to 100 if empty
-        const newSize = currentSize + 10;
-        socket.emit('bigger', newSize + 'px');
+        const tempSize = parseInt(circle.style.width) || 100; // default to 100 if empty
+        const newSize = tempSize + 10;
+        socket.emit('sendSize', newSize + 'px');
     }
 
     function smaller() {
-        const currentSize = parseInt(circle.style.width) || 100; // default to 100 if empty
-        const newSize = currentSize - 10;
-        socket.emit('smaller', newSize + 'px');
+        const tempSize = parseInt(circle.style.width) || 100; // default to 100 if empty
+        const newSize = tempSize - 10;
+        socket.emit('sendSize', newSize + 'px');
     }
 
     function getRandomColor() {
