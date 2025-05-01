@@ -70,22 +70,23 @@
   }
 
   function changeShape() { 
-    let radius;
-    if (shape.style.borderRadius == "50%") {
+  let radius;
+    if (shape.style.borderRadius === "50%") {
       lastShape = "circle";
       radius = "25%";
     }
-    else if (shape.style.borderRadius == "25%" && lastShape == "circle") {
+    else if (shape.style.borderRadius === "25%" && lastShape === "circle") {
       radius = "0%";
-    }
-    else if (shape.style.bordeRadius == "25%" && lastShape == "square") {
-      radius = "50%";
-    }
-    else if (shape.style.bordeRadius == "0%") {
       lastShape = "square";
-      radius = "25%";
     }
-    socket.emit("morphShape", radius, lastShape);
+    else if (shape.style.borderRadius === "25%" && lastShape === "square") {
+      radius = "50%";
+      lastShape = "circle";
+    }
+    else if (shape.style.borderRadius === "0%") {
+      radius = "25%";
+      lastShape = "square";
+    }
   }
 
   function bigger() {
