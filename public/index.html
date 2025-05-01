@@ -5,58 +5,99 @@
   <title>Test Subject</title>
   <style>
     #shape {
+      display: flex;
       width: 100px;
       height: 100px;
       background-color: red;
       border-radius: 50%;
       margin: 50px auto;
     }
+    #controlPanel {
+      display: flex;
+      flex-direction:Column; 
+    }
+    #flex-container {
+      display:flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      flex-wrap:wrap;
+    }
   </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 </head>
 <body>
-  <div id="shape"></div>
-  <button onclick="changeColor()">Change Color</button>
-  <button onclick="bigger()">Bigger</button>
-  <button onclick="smaller()">Smaller</button>
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-    const shape = document.getElementById('shape');
-
-    
-
-    // Update shape color when message received
-    socket.on('updateColor', (color) => {
-      shape.style.backgroundColor = color;
-    });
-
-    // Increase/Decrease shape size when message recieved
-    socket.on('changeSize', (size) => {
-        shape.style.width = size;
-        shape.style.height = size;
-    });
-
-    function changeColor() {
-      const color = getRandomColor();
-      socket.emit('changeColor', color);
-    }
-
-    function bigger() {
-        const tempSize = parseInt(shape.style.width) || 100; // default to 100 if empty
-        const newSize = tempSize + 10;
-        socket.emit('sendSize', newSize + 'px');
-    }
-
-    function smaller() {
-        const tempSize = parseInt(shape.style.width) || 100; // default to 100 if empty
-        const newSize = tempSize - 10;
-        socket.emit('sendSize', newSize + 'px');
-    }
-
-    function getRandomColor() {
-      return '#' + Math.floor(Math.random() * 16777215).toString(16);
-    }
-  </script>
+  <div id="flex-container">
+    <div id="shape"></div>
+    <div id="controlPanel">
+      <button onclick="changeColor()">Change Color</button>
+      <button onclick="bigger()">Bigger</button>
+      <button onclick="smaller()">Smaller</button>
+    </div>
+  </div>
 </body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  const shape = document.getElementById('shape'); 
+
+  // Variable for managing changeShape function
+  let lastShape;
+
+  // Update shape color when message received
+  socket.on('updateColor', (color) => {
+    shape.style.backgroundColor = color;
+  });
+
+  // Increase/Decrease shape size when message recieved
+  socket.on('updateSize', (size) => {
+      shape.style.width = size;
+      shape.style.height = size;
+  });
+
+  socket.on('updateShape', (radius, prevShape) => {
+    lastShape = prevShape;
+    shape.style.borderRadius = radius;
+  });
+
+  function changeColor() {
+    const color = getRandomColor();
+    socket.emit('changeColor', color);
+  }
+
+  function changeShape() { 
+    if (shape.style.border-radius == "50%") {
+      lastShape = "circle";
+      const radius = "25%";
+    }
+    else if (shape.style.border-radius == "25%" && lastShape == "circle") {
+      const radius = "0%";
+    }
+    else if (shape.style.border-radius == "25%" && lastShape == "square") {
+      const radius = "50%";
+    }
+    else if (shape.style.border-radius == "0%") {
+      lastShape = "square";
+      const radius = "25%";
+    }
+    socket.emit("morphShape", radius, lastShape);
+
+  }
+
+  function bigger() {
+      const tempSize = parseInt(shape.style.width) || 100; // default to 100 if empty
+      const newSize = tempSize + 10;
+      socket.emit('sendSize', newSize + 'px');
+  }
+
+  function smaller() {
+      const tempSize = parseInt(shape.style.width) || 100; // default to 100 if empty
+      const newSize = tempSize - 10;
+      socket.emit('sendSize', newSize + 'px');
+  }
+
+  function getRandomColor() {
+    return '#' + Math.floor(Math.random() * 16777215).toString(16);
+  }
+</script>
 </html>

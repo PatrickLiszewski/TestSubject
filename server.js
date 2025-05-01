@@ -11,6 +11,8 @@ const io = new Server(server);
 // Properties of the Test Subject are saved here as global variables
 let currentColor = 'red';
 let currentSize = '100px';
+let currentRadius = "50%";
+let prevShape = "circle";
 
 // Serve static files from "public" folder
 app.use(express.static('public'));
@@ -19,7 +21,8 @@ app.use(express.static('public'));
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
   socket.emit('updateColor', currentColor);
-  socket.emit('changeSize', currentSize);
+  socket.emit('updateSize', currentSize);
+  socket.emit('updateShape', currentRadius, prevShape);
 
   socket.on('changeColor', (color) => {
     console.log('Color changed to:', color);
@@ -28,9 +31,16 @@ io.on('connection', (socket) => {
   });
 
   socket.on('sendSize', (size) => {
-    console.log('time to change size!');
+    console.log('Time to change size!');
     currentSize = size;
-    io.emit('changeSize', size);
+    io.emit('updateSize', size);
+  });
+
+  socket.on('morphShape', (radius, lastShape) => {
+    console.log('Shifting shape!');
+    currentRadius = radius;
+    prevShape = lastShape;
+    io.emit('updateShape', radius, lastShape);
   });
 
   socket.on('disconnect', () => {
