@@ -25,10 +25,12 @@
       border-radius: 50%;
     }
     #controlPanel {
+      background-color: gray;
       display: flex;
       flex-direction: column;
       gap: 10px;
       align-items: center;
+      padding: 10px;
     }
 
   </style>
@@ -40,6 +42,7 @@
       <div id="shape"></div>
     </div>
     <div id="controlPanel">
+      <h3>Control Panel</h3>
       <button onclick="changeColor()">Change Color</button>
       <button onclick="bigger()">Bigger</button>
       <button onclick="smaller()">Smaller</button>
@@ -97,6 +100,8 @@
       radius = "25%";
       lastShape = "square";
     }
+
+    socket.emit('morphShape', radius, lastShape);
   }
 
   function bigger() {
@@ -106,7 +111,7 @@
   }
 
   function smaller() {
-      const tempSize = parseInt(shape.style.width) || 100; // default to 100 if empty
+      const tempSize = parseInt(shape.style.width) || 10; // default to 100 if empty
       const newSize = tempSize - 10;
       socket.emit('sendSize', newSize + 'px');
   }
