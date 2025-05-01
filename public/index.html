@@ -15,6 +15,8 @@
     #controlPanel {
       display: flex;
       flex-direction:Column; 
+      border-radius: 50%;
+      margin: 50px auto;
     }
     #flex-container {
       display:flex;
@@ -68,22 +70,22 @@
   }
 
   function changeShape() { 
+    let radius;
     if (shape.style.borderRadius == "50%") {
       lastShape = "circle";
-      const radius = "25%";
+      radius = "25%";
     }
     else if (shape.style.borderRadius == "25%" && lastShape == "circle") {
-      const radius = "0%";
+      radius = "0%";
     }
     else if (shape.style.bordeRadius == "25%" && lastShape == "square") {
-      const radius = "50%";
+      radius = "50%";
     }
     else if (shape.style.bordeRadius == "0%") {
       lastShape = "square";
-      const radius = "25%";
+      radius = "25%";
     }
     socket.emit("morphShape", radius, lastShape);
-
   }
 
   function bigger() {
