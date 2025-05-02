@@ -38,6 +38,28 @@
       padding:10px;
       margin:10px;
     }
+    #controlPanel input{
+      width: 75%;
+      height: 100px;
+    }
+    .falling-message {
+      position: absolute;
+      color: black;
+      animation: fall 5s linear forwards;
+      white-space: nowrap;
+    }
+
+    @keyframes fall {
+      from {
+        top: -50px;
+        opacity: 1;
+      }
+      to {
+        top: 100vh;
+        opacity: 0;
+      }
+    }
+
   </style>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 </head>
@@ -48,10 +70,16 @@
     </div>
     <div id="controlPanel">
       <h1>CONTROL PANEL</h1>
+      <h3>Change the shape!</h3>
       <button onclick="changeColor()">Change Color</button>
       <button onclick="bigger()">Bigger</button>
       <button onclick="smaller()">Smaller</button>
       <button onclick="changeShape()">Change Shape</button>
+      <h3>Send a message!</h3>
+      <input type="text" id="userName" placeholder="Your name">
+      <input type="text" id="userMessage" placeholder="Your message">
+      <button onclick="sendMessage()">Send Message</button>
+
     </div>
   </div>
   
@@ -136,5 +164,36 @@
   function getRandomColor() {
     return '#' + Math.floor(Math.random() * 16777215).toString(16);
   }
+
+
+  // Falling message function
+  function sendMessage() {
+    const name = document.getElementById("userName").value.trim();
+    const msg = document.getElementById("userMessage").value.trim();
+    if (!name || !msg) return;
+
+    const fullMessage = `${msg} - ${name}`;
+    socket.emit("newMessage", fullMessage);
+
+    document.getElementById("userMessage").value = '';
+  }
+
+  // Receive message and start animation
+  socket.on("displayMessage", (text) => {
+    const msgElem = document.createElement("div");
+    msgElem.className = "falling-message";
+    msgElem.textContent = text;
+    
+    // Random horizontal position
+    msgElem.style.left = Math.random() * 80 + "vw";
+
+    document.body.appendChild(msgElem);
+
+    // Remove the messaghe after animation completes
+    setTimeout(() => {
+      msgElem.remove();
+    }, 5000);
+  });
+
 </script>
 </html>

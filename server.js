@@ -43,6 +43,10 @@ io.on('connection', (socket) => {
     io.emit('updateShape', radius, lastShape);
   });
 
+  socket.on('newMessage', (msgText) => {
+    io.emit('displayMessage', msgText);
+  });  
+
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
   });
