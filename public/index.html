@@ -5,19 +5,13 @@
   <title>Test Subject</title>
   <style>
     #flex-container {
+      min-height: 100vh;
       display: flex;
-      flex-direction: row-reverse;
-      align-items: center;
-      justify-content: center;
-      gap: 400px;
-      margin-top: 50px;
-      height: 100vh;
-      width:100vh;
       flex-wrap:wrap;
+      flex-direction: row-reverse;
     }
     #shape-container {
-      width: 200px; 
-      height: 200px;
+      width:70vw;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -29,11 +23,20 @@
       border-radius: 50%;
     }
     #controlPanel {
-      padding: 10px;
+      width:30vw;
       background-color: gray;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 5px;
+      align-items: center;
+    }
+    #controlPanel button{
+      width: 75%;
+      height: 100px;
+    }
+    #controlPanel h1{
+      padding:10px;
+      margin:10px;
     }
   </style>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
@@ -44,7 +47,7 @@
       <div id="shape"></div>
     </div>
     <div id="controlPanel">
-      <h3>Control Panel</h3>
+      <h1>CONTROL PANEL</h1>
       <button onclick="changeColor()">Change Color</button>
       <button onclick="bigger()">Bigger</button>
       <button onclick="smaller()">Smaller</button>
