@@ -44,6 +44,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('newMessage', (msgText) => {
+    console.log('Displaying message!')
     io.emit('displayMessage', msgText);
   });  
 
