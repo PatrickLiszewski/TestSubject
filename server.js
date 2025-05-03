@@ -59,7 +59,7 @@ io.on('connection', (socket) => {
 
   socket.on("toggleDarkMode", (enabledDark, enabledGlow) => {
     console.log("Dark mode set to:", enabledDark);
-    darkModeOn = enabled;
+    darkModeOn = enabledDark;
     glowOn = enabledGlow;
     io.emit("setDarkMode", darkModeOn, glowOn);
   });
