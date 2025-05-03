@@ -57,6 +57,9 @@
       color: white !important;
       border-color: white !important;
     }
+    .glow {
+     box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.8);
+    }
 
     @keyframes fall {
       from {
@@ -85,6 +88,7 @@
       <button onclick="smaller()">Smaller</button>
       <button onclick="changeShape()">Change Shape</button>
       <button onclick="toggleLights()">Light Switch</button>
+      <button onclick="toggleRainbow()">Toggle Rainbow Mode</button>
       <h3>Send a message!</h3>
       <input type="text" id="userName" placeholder="Your name">
       <input type="text" id="userMessage" placeholder="Your message">
@@ -103,8 +107,12 @@
   // Variable for managing changeShape function
   let lastShape;
 
-  // Variable for tracking darkMode
+  // Variable for tracking dark mode
   let darkModeOn = false;
+
+  // Variables for tracking rainbow mode
+  let rainbowMode = false;
+  let rainbowInterval = null;
 
   // Update shape color when message received
   socket.on('updateColor', (color) => {
@@ -159,11 +167,48 @@
     darkModeOn = enabled;
     if (darkModeOn) {
       document.body.classList.add("dark-mode");
+      shape.classList.add("glow");
     } else {
       document.body.classList.remove("dark-mode");
+      shape.classList.remove("glow");
     }
   });
 
+  function toggleRainbow() {
+    rainbowMode = !rainbowMode;
+    socket.emit("toggleRainbow", rainbowMode);
+  }
+
+  socket.on("setRainbow", (enabled) => {
+    rainbowMode = enabled;
+    if (rainbowMode) {
+      startRainbow();
+    } else {
+      stopRainbow();
+    }
+  });
+
+  function startRainbow() {
+    rainbowInterval = setInterval(() => {
+      const color = getRandomColor();
+      shape.style.backgroundColor = color;
+      if (glowOn) {
+        shape.style.boxShadow = `0 0 20px 10px ${color}`;
+      }
+    }, 300); // Color change interval (ms)
+  }
+
+  function stopRainbow() {
+    clearInterval(rainbowInterval);
+    rainbowInterval = null;
+
+    // Restore previous glow style or none
+    if (glowOn) {
+      shape.style.boxShadow = `0 0 20px 10px rgba(255, 255, 255, 0.8)`; // white glow
+    } else {
+      shape.style.boxShadow = "none";
+    }
+  }
 
   function bigger() {
       const tempSize = parseInt(shape.style.width);
