@@ -48,6 +48,15 @@
       animation: fall 5s linear forwards;
       white-space: nowrap;
     }
+    .dark-mode {
+      background-color: black !important;
+      color: white !important;
+    }
+    .dark-mode * {
+      background-color: black !important;
+      color: white !important;
+      border-color: white !important;
+    }
 
     @keyframes fall {
       from {
@@ -75,6 +84,7 @@
       <button onclick="bigger()">Bigger</button>
       <button onclick="smaller()">Smaller</button>
       <button onclick="changeShape()">Change Shape</button>
+      <button onclick="toggleLights()">Light Switch</button>
       <h3>Send a message!</h3>
       <input type="text" id="userName" placeholder="Your name">
       <input type="text" id="userMessage" placeholder="Your message">
@@ -92,6 +102,9 @@
 
   // Variable for managing changeShape function
   let lastShape;
+
+  // Variable for tracking darkMode
+  let darkModeOn = false;
 
   // Update shape color when message received
   socket.on('updateColor', (color) => {
@@ -133,9 +146,24 @@
       radius = "25%";
       lastShape = "square";
     }
-
     socket.emit('morphShape', radius, lastShape);
   }
+
+  function toggleLights() {
+    darkModeOn = !darkModeOn;
+    socket.emit("toggleDarkMode", darkModeOn);
+  }
+
+  // Receive dark mode update from server
+  socket.on("setDarkMode", (enabled) => {
+    darkModeOn = enabled;
+    if (darkModeOn) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  });
+
 
   function bigger() {
       const tempSize = parseInt(shape.style.width);

@@ -13,6 +13,7 @@ let currentColor = 'red';
 let currentSize = '100px';
 let currentRadius = "50%";
 let prevShape = "circle";
+let darkModeOn = false;
 
 // Serve static files from "public" folder
 app.use(express.static('public'));
@@ -23,6 +24,7 @@ io.on('connection', (socket) => {
   socket.emit('updateColor', currentColor);
   socket.emit('updateSize', currentSize);
   socket.emit('updateShape', currentRadius, prevShape);
+  socket.emit('setDarkMode', darkModeOn);
 
   socket.on('changeColor', (color) => {
     console.log('Color changed to:', color);
@@ -50,6 +52,12 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
+  });
+
+  socket.on("toggleDarkMode", (enabled) => {
+    console.log("Dark mode set to:", enabled);
+    darkModeOn = enabled;
+    io.emit("setDarkMode", darkModeOn);
   });
 });
 
