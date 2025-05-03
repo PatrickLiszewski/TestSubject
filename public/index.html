@@ -60,6 +60,16 @@
     .glow {
      box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.8);
     }
+    .rainbow-text {
+      background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbowText 2s linear infinite;
+    }
+    @keyframes rainbowText {
+      0% { background-position: 0%; }
+      100% { background-position: 100%; }
+    }
 
     @keyframes fall {
       from {
@@ -181,7 +191,7 @@
       shape.style.boxShadow = "none"; // <- Explicitly remove the glow
     }
   });
-  
+
   function toggleRainbow() {
     rainbowMode = !rainbowMode;
     socket.emit("toggleRainbow", rainbowMode);
@@ -261,19 +271,24 @@
 
   // Receive message and start animation
   socket.on("displayMessage", (text) => {
-    const msgElem = document.createElement("div");
-    msgElem.className = "falling-message";
-    msgElem.textContent = text;
-    
-    // Random horizontal position
-    msgElem.style.left = (Math.random() * 50 + 30)+ "vw";
+  const msgElem = document.createElement("div");
+  msgElem.className = "falling-message";
+  msgElem.textContent = text;
 
-    document.body.appendChild(msgElem);
+  // Random horizontal position
+  msgElem.style.left = (Math.random() * 50 + 30) + "vw";
 
-    // Remove the messaghe after animation completes
-    setTimeout(() => {
-      msgElem.remove();
-    }, 5000);
+  // Apply rainbow style if rainbow mode is active
+  if (rainbowMode) {
+    msgElem.style.color = getRandomColor();
+    msgElem.style.textShadow = `0 0 10px ${msgElem.style.color}`;
+  }
+
+  document.body.appendChild(msgElem);
+
+  setTimeout(() => {
+    msgElem.remove();
+  }, 5000);
   });
 
 </script>
