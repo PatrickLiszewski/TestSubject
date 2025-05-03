@@ -168,15 +168,20 @@
   socket.on("setDarkMode", (enabledDark, enabledGlow) => {
     darkModeOn = enabledDark;
     glowOn = enabledGlow;
+  
     if (darkModeOn) {
       document.body.classList.add("dark-mode");
-      shape.classList.add("glow");
+      if (glowOn) {
+        shape.style.boxShadow = rainbowMode 
+          ? `0 0 20px 10px ${shape.style.backgroundColor}` 
+          : `0 0 20px 10px rgba(255, 255, 255, 0.8)`;
+      }
     } else {
       document.body.classList.remove("dark-mode");
-      shape.classList.remove("glow");
+      shape.style.boxShadow = "none"; // <- Explicitly remove the glow
     }
   });
-
+  
   function toggleRainbow() {
     rainbowMode = !rainbowMode;
     socket.emit("toggleRainbow", rainbowMode);
