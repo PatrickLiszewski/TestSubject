@@ -178,7 +178,7 @@
   socket.on("setDarkMode", (enabledDark, enabledGlow) => {
     darkModeOn = enabledDark;
     glowOn = enabledGlow;
-  
+
     if (darkModeOn) {
       document.body.classList.add("dark-mode");
       if (glowOn) {
@@ -188,7 +188,16 @@
       }
     } else {
       document.body.classList.remove("dark-mode");
-      shape.style.boxShadow = "none"; // <- Explicitly remove the glow
+      shape.style.boxShadow = "none"; // Explicitly remove the glow
+    }
+
+    // Apply rainbow text color when both rainbow mode and dark mode are active
+    if (darkModeOn && rainbowMode) {
+      const messages = document.querySelectorAll('.falling-message');
+      messages.forEach(msg => {
+        msg.style.color = getRandomColor(); // Change message color to a random rainbow color
+        msg.style.textShadow = `0 0 10px ${msg.style.color}`; // Optional: add a glow effect
+      });
     }
   });
 
@@ -271,24 +280,24 @@
 
   // Receive message and start animation
   socket.on("displayMessage", (text) => {
-  const msgElem = document.createElement("div");
-  msgElem.className = "falling-message";
-  msgElem.textContent = text;
+    const msgElem = document.createElement("div");
+    msgElem.className = "falling-message";
+    msgElem.textContent = text;
 
-  // Random horizontal position
-  msgElem.style.left = (Math.random() * 50 + 30) + "vw";
+    // Random horizontal position
+    msgElem.style.left = (Math.random() * 50 + 30) + "vw";
 
-  // Apply rainbow style if rainbow mode is active
-  if (rainbowMode) {
-    msgElem.style.color = getRandomColor();
-    msgElem.style.textShadow = `0 0 10px ${msgElem.style.color}`;
-  }
+    // Apply rainbow style if rainbow mode is active
+    if (rainbowMode) {
+      msgElem.style.color = getRandomColor();
+      msgElem.style.textShadow = `0 0 10px ${msgElem.style.color}`;
+    }
 
-  document.body.appendChild(msgElem);
+    document.body.appendChild(msgElem);
 
-  setTimeout(() => {
-    msgElem.remove();
-  }, 5000);
+    setTimeout(() => {
+      msgElem.remove();
+    }, 5000);
   });
 
 </script>
