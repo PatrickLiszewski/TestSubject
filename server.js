@@ -14,6 +14,7 @@ let currentSize = '100px';
 let currentRadius = "50%";
 let prevShape = "circle";
 let darkModeOn = false;
+let glowOn = false;
 let rainbowMode = false;
 
 // Serve static files from "public" folder
@@ -25,7 +26,7 @@ io.on('connection', (socket) => {
   socket.emit('updateColor', currentColor);
   socket.emit('updateSize', currentSize);
   socket.emit('updateShape', currentRadius, prevShape);
-  socket.emit('setDarkMode', darkModeOn);
+  socket.emit('setDarkMode', darkModeOn, glowOn);
   socket.emit('setRainbow', rainbowMode);
 
   socket.on('changeColor', (color) => {
@@ -56,17 +57,18 @@ io.on('connection', (socket) => {
     console.log('User disconnected:', socket.id);
   });
 
-  socket.on("toggleDarkMode", (enabled) => {
-    console.log("Dark mode set to:", enabled);
+  socket.on("toggleDarkMode", (enabledDark, enabledGlow) => {
+    console.log("Dark mode set to:", enabledDark);
     darkModeOn = enabled;
-    io.emit("setDarkMode", darkModeOn);
+    glowOn = enabledGlow;
+    io.emit("setDarkMode", darkModeOn, glowOn);
   });
 
   socket.on('toggleRainbow', (enabled) => {
     rainbowMode = enabled;
     io.emit('setRainbow', rainbowMode);
   });
-  
+
 });
 
 const PORT = process.env.PORT || 3000;

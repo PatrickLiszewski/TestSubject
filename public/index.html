@@ -107,8 +107,9 @@
   // Variable for managing changeShape function
   let lastShape;
 
-  // Variable for tracking dark mode
+  // Variable for tracking dark mode and the glow of the shape
   let darkModeOn = false;
+  let glowOn = false;
 
   // Variables for tracking rainbow mode
   let rainbowMode = false;
@@ -159,12 +160,14 @@
 
   function toggleLights() {
     darkModeOn = !darkModeOn;
-    socket.emit("toggleDarkMode", darkModeOn);
+    glowOn = !glowOn;
+    socket.emit("toggleDarkMode", darkModeOn, glowOn);
   }
 
   // Receive dark mode update from server
-  socket.on("setDarkMode", (enabled) => {
+  socket.on("setDarkMode", (enabledDark, enabledGlow) => {
     darkModeOn = enabled;
+    glowOn = enabledGlow;
     if (darkModeOn) {
       document.body.classList.add("dark-mode");
       shape.classList.add("glow");
@@ -195,7 +198,7 @@
       if (glowOn) {
         shape.style.boxShadow = `0 0 20px 10px ${color}`;
       }
-    }, 300); // Color change interval (ms)
+    }, 300);
   }
 
   function stopRainbow() {
@@ -204,7 +207,7 @@
 
     // Restore previous glow style or none
     if (glowOn) {
-      shape.style.boxShadow = `0 0 20px 10px rgba(255, 255, 255, 0.8)`; // white glow
+      shape.style.boxShadow = `0 0 20px 10px rgba(255, 255, 255, 0.8)`; // restores white glow
     } else {
       shape.style.boxShadow = "none";
     }
