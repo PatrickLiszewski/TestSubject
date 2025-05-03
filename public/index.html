@@ -166,7 +166,7 @@
 
   // Receive dark mode update from server
   socket.on("setDarkMode", (enabledDark, enabledGlow) => {
-    darkModeOn = enabled;
+    darkModeOn = enabledDark;
     glowOn = enabledGlow;
     if (darkModeOn) {
       document.body.classList.add("dark-mode");
