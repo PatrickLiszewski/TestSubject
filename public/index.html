@@ -5,25 +5,28 @@
   <title>Test Subject</title>
   <style>
     #flex-container {
-      min-height: 100vh;
       display: flex;
-      flex-wrap:wrap;
       flex-direction: row;
+      height: 100vh;
     }
     #shape-container {
-      width:70vw;
+      width: 70vw;
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
+      overflow: hidden;
     }
     #shape {
       width: 100px;
       height: 100px;
       background-color: red;
       border-radius: 50%;
+      transition: width 0.3s, height 0.3s;
     }
     #controlPanel {
-      width:30vw;
+      width: 30vw;
+      flex-shrink: 0;
       background-color: gray;
       display: flex;
       flex-direction: column;
@@ -44,7 +47,7 @@
     }
     .falling-message {
       position: absolute;
-      color: unset !important;
+      color: color;
       animation: fall 5s linear forwards;
       white-space: nowrap;
       text-shadow: none;
@@ -67,6 +70,7 @@
       -webkit-text-fill-color: transparent;
       animation: rainbowText 2s linear infinite;
     }
+
     @keyframes rainbowText {
       0% { background-position: 0%; }
       100% { background-position: 100%; }
@@ -83,6 +87,15 @@
       }
     }
 
+    @media (max-width: 768px) {
+      #flex-container {
+      flex-direction: column;
+    }
+
+    #controlPanel, #shape-container {
+    width: 100vw;
+    }
+  }
   </style>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 </head>
@@ -279,7 +292,6 @@
     document.getElementById("userMessage").value = '';
   }
 
-  // Receive message and start animation
   socket.on("displayMessage", (text) => {
     const msgElem = document.createElement("div");
     msgElem.className = "falling-message";
@@ -290,8 +302,12 @@
 
     // Apply rainbow style if rainbow mode is active
     if (rainbowMode) {
-      msgElem.style.color = getRandomColor();
-      msgElem.style.textShadow = `0 0 10px ${msgElem.style.color}`;
+      const rainbowColor = getRandomColor(); // Generate random rainbow color
+      msgElem.style.color = rainbowColor;
+      msgElem.style.textShadow = `0 0 10px ${rainbowColor}`; // Apply glow effect for rainbow mode
+    } else {
+      msgElem.style.color = darkModeOn ? 'white' : 'black'; // Default color based on dark mode
+      msgElem.style.textShadow = darkModeOn ? '0 0 10px rgba(255, 255, 255, 0.8)' : 'none'; // Glow in dark mode
     }
 
     document.body.appendChild(msgElem);
